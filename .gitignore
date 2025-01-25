@@ -1,11 +1,11 @@
-.idea
-.venv
-Client/test/
-.vscode
-__pycache__
-192.168.29.1
-192.168.29.136
-192.168.29.139
+Server/.idea
+Server/.venv
+Server/test/
+Server/.vscode
+Server/__pycache__
+Server/192.168.29.1
+Server/192.168.29.136
+Server/192.168.29.139
 
 
 # Prerequisites
