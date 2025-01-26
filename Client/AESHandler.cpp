@@ -3,6 +3,7 @@
 #include "Client.h"
 
 AESHandler* AESHandler::instance = nullptr; // Initialize singleton instance to null
+std::string server_public_key_hex = "ef913984ad9cd58ce89dd4d813f1540e5bae4f6b6061d3c964ea478eca8e3b03"; // Change this
 using namespace Helper;
 
 // Private constructor
@@ -10,6 +11,7 @@ AESHandler::AESHandler() {
     if (sodium_init() == -1) {
         throw std::runtime_error("libsodium initialization failed!");
     }
+
 }
 
 // Singleton accessor
@@ -51,7 +53,6 @@ const unsigned char* AESHandler::getNonce() const {
 
 // Encrypt AES key and nonce using server's public key
 std::string AESHandler::encryptKeyAndNonce() {
-    std::string server_public_key_hex = "e113e344cba517da8d610dec176b718c8cda5f0bfb761bce712003066350211c";
     std::vector<unsigned char> server_public_key = hex_to_bytes(server_public_key_hex);
     unsigned char encrypted_key[crypto_box_SEALBYTES + sizeof(aes_key)];
     unsigned char encrypted_nonce[crypto_box_SEALBYTES + sizeof(nonce)];
@@ -70,7 +71,6 @@ std::string AESHandler::encryptKeyAndNonce() {
 
 // Encrypt AES key and nonce using server's public key
 std::string AESHandler::encryptKeyAndNonceTemp() {
-    std::string server_public_key_hex = "e113e344cba517da8d610dec176b718c8cda5f0bfb761bce712003066350211c";
     std::vector<unsigned char> server_public_key = hex_to_bytes(server_public_key_hex);
     unsigned char encrypted_key_temp[crypto_box_SEALBYTES + sizeof(aes_key_temp)];
     unsigned char encrypted_nonce_temp[crypto_box_SEALBYTES + sizeof(nonce_temp)];
