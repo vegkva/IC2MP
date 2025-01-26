@@ -1,12 +1,33 @@
 # Command and control over ICMP (Server)
 
-### IMPORTANT
-First run 
+## IMPORTANT
+
+### 1
 ```sh
 python3 generate_keys.py
 ```
-to generate a new private and public key. Replace the private key in [crypto.py](./crypto.py) and public key in [AESHandler.cpp](../Client/AESHandler.cpp)
+Generates a new private and public key. Replace the private key in [crypto.py](./crypto.py) and public key in [AESHandler.cpp](../Client/AESHandler.cpp).
 
+### 2
+```sh
+sudo iptables -A OUTPUT -p icmp --icmp-type echo-reply -j DROP
+```
+Blocks all outgoing ICMP echo-reply packets from the OS. Scapy will handle all ICMP-packets.
+
+### 3
+
+```sh
+python3 -m venv myenv
+source myenv/bin/activate
+pip install -r requirements.txt
+sudo ./myenv/bin/python3 main.py
+```
+This will create a virtual environment, install the required python libraries ([requirements.txt](./requirements.txt)) and start the server. Scapy requires sudo. 
+
+**The server is now waiting for clients to connect** 
+
+<br>
+<br>
 
 ![](./images/server.png)
 
