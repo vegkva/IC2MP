@@ -1,3 +1,5 @@
+from helpers import *
+
 class ClientManager:
     def __init__(self):
         self.clients = []
@@ -8,6 +10,7 @@ class ClientManager:
         unique = False
         for client in self.clients:
             if client.get_id() == new_client.get_id():
+                print("add_client() already connected")
                 client.activate()
                 return f"Client: {new_client.get_id()} already connected" # Should activate (client.activate()) the client in order for time_manager to be updated
         self.clients.append(new_client)
@@ -50,3 +53,15 @@ class ClientManager:
     def cmd_all_clients(self, cmd):
         for client in self.clients:
             client.set_server_command(cmd)
+
+    def print_clients(self):
+        if self.get_clients():
+            print_formatted_text(FormattedText([
+                ('class:ul_bold', f"\nClient ID\t\tUser\t\t\t\t\tTimeout\t\t\tCommand\t\t\t\t\tOutput file")
+            ]), style=style)
+
+            for client in self.get_clients():
+                client.print_info(self.get_client_active())
+
+        else:
+            print("No clients connected :/")

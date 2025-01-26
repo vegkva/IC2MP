@@ -5,6 +5,7 @@ from crypto import *
 import os
 import datetime
 from time_manager import *
+from helpers import *
 
 style = Style.from_dict({
     'red': 'ansired',
@@ -25,7 +26,7 @@ class Client:
     def __init__(self, id, encrypted_hex_block, client_manager):
 
         self._timer_manager = TimerManager()
-        self.client_manager = client_manager
+        self._client_manager = client_manager
         self._id = id
         self._whoami = ""
         self._command_executing = False
@@ -184,7 +185,7 @@ class Client:
     def remove(self):
         # Call remove_client method from ClientManager instance
         self.cleanup()
-        self.client_manager.remove_client(self)
+        self._client_manager.remove_client(self)
 
     def initialize(self):
         aes_key, aes_nonce = decrypt_aes_nonce(remove_padded_zeroes(self.get_encrypted_hex_block()))
@@ -198,7 +199,6 @@ class Client:
             remove_padded_zeroes(self.get_encrypted_hex_block()[280:])
         ).split()[1])
         self.activate_client()
-
         self.cleanup()  # make client ready for next payload
         self.set_server_command("INIT OK")  # Let CLIENT know that SERVER successfully received and decrypted the generated key and nonce
 
@@ -215,9 +215,11 @@ class Client:
         self.get_time_manager().start_timer(self._id)
 
     def updateAES(self):
+
         aes_key_new, aes_nonce_new = decrypt_aes_nonce(remove_padded_zeroes(self.get_encrypted_hex_block()))
-        self.set_client_response(decrypt_msg_gcm(self.get_aes_key(), self.get_aes_nonce(),
-                                                   remove_padded_zeroes(self.get_encrypted_hex_block()[280:])))
+
+        self.set_client_response(decrypt_msg_gcm(self.get_aes_key(), self.get_aes_nonce(), remove_padded_zeroes(self.get_encrypted_hex_block()[280:])))
+
         self.set_aes_key(aes_key_new)
         self.set_aes_nonce(aes_nonce_new)
 
@@ -298,8 +300,11 @@ class Client:
 
         # Check if client connected
         try:
+            # print_info(),  '>' not supported between instances of 'NoneType' and 'int'
+
             if self._timer_manager.get_elapsed_time(self._id) > int(self._timeout): # BUG here
                 self._client_ready = False
+                self._client_manager.clear_client_active()
             else:
                 self._client_ready = True
             if self._id == active_client:
@@ -315,41 +320,6 @@ class Client:
         except Exception as error:
             print("print_info(), ", error)
 
-
-    def print_decrypted(self):
-        test3 = self._decrypted.split("\n")
-
-        cols = os.get_terminal_size().columns
-        rows = os.get_terminal_size().lines
-        longer = False
-        longest_line_index = 0
-        longest_line = 0
-        for index, line in enumerate(test3):
-            if len(line) > cols:
-                longer = True
-            if len(line) > longest_line:
-                longest_line_index = index
-                longest_line = len(line)
-
-        #print(longest_line)
-        if longer:
-            n = cols - 6
-            test2 = [self._decrypted.replace("\n\n","")[i:i+n] for i in range(0, len(self._decrypted), n)]
-
-            print("_"*(n+2))
-
-            for i in test2:
-                if i == test2[-1]:
-                    print("|" + i + (full_length-len(i))*" " + " |")
-                else:
-                    full_length = len(i)
-                    print("|" + i + " |")
-            print("|" + (n+1)*"_" + "|\n")
-        else:
-            print("_"*(longest_line+1))
-            for line in test3:
-                print("|" + line + (longest_line-len(line))*" " + "|")
-            print("|" + (longest_line)*"_" + "|\n")
 
    # Method to nicely print out all attributes in a table using prompt_toolkit
     def print_attributes(self):
