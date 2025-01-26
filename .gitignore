@@ -53,12 +53,6 @@ Release/
 Debug/
 ipch/
 
-# Build directories
-build/
-CMakeFiles/
-CMakeCache.txt
-Makefile
-cmake_install.cmake
 
 Client/x64
 Client/.vs
