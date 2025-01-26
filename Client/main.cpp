@@ -10,7 +10,6 @@ using namespace Helper;
 
 int main(int argc, char* argv[]) {
 
-    // Create a client with a unique ID (for example, ID = 1)
     Client* client = Client::getInstance();
         
     // Set the client's initial parameters
