@@ -1,5 +1,12 @@
 # Command and control over ICMP (Server)
 
+### IMPORTANT
+First run 
+```sh
+python3 generate_keys.py
+```
+to generate a new private and public key. Replace the private key in [crypto.py](./crypto.py) and public key in [AESHandler.cpp](../Client/AESHandler.cpp)
+
 
 ![](./images/server.png)
 
