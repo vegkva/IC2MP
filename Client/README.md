@@ -1,6 +1,6 @@
 # Command and control over ICMP (client)
 
-
+First make necessary changes in [main.cpp](./main.cpp) and [AESHandler.cpp](./AESHandler.cpp) 
 
 ## Compile on Windows
 - Import project into Visual Studio 2022
@@ -24,7 +24,6 @@ wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.20-stable-m
 tar -xzf libsodium-1.0.20-stable-mingw.tar.gz -C /opt libsodium-win64/
 ```
 
-Make configurations in main.cpp (change IP, public key etc.)
 ```sh
 make
 ```
