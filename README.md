@@ -1,13 +1,14 @@
-    *Disclaimer*
+## Disclaimer
 
-    This tool is for educational and authorized security assessments only. Use must comply with all applicable laws.
-    By using this tool, you agree:
+This tool is for educational and authorized security assessments only. Use must comply with all applicable laws.
+By using this tool, you agree:
 
-    - To use it only with proper authorization: It’s for identifying vulnerabilities in systems you own or have explicit permission to assess.
-    - To accept full responsibility for your actions: Developers are not liable for misuse, damages, or legal issues.
-    - To comply with all laws: Unauthorized use may violate legal regulations. Ensure you understand the implications.
+- **To use it only with proper authorization:** This project is for identifying vulnerabilities in systems you own or have explicit permission to assess.
+- **To accept full responsibility for your actions:** Developers of this project are not liable for misuse, damages, or legal issues.
+- **To comply with all laws:** Unauthorized use may violate legal regulations. Ensure you understand the implications.
 
-
+<br>
+<br>
 
 ## What is this
 
