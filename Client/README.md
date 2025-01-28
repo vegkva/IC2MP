@@ -1,5 +1,7 @@
 # Command and control over ICMP (client)
 
+*Does not need adminstrator privileges to run*
+
 First make necessary changes in [main.cpp](./main.cpp) and [AESHandler.cpp](./AESHandler.cpp) 
 
 ## Compile on Windows
