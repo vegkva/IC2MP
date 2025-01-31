@@ -27,7 +27,9 @@ def reply_to_client(packet):
             reply_packet = ip_reply / icmp_reply / payload
 
             # Send the reply
-            send(reply_packet, verbose=0)
+            # Set sendp instead of send if using tailscale
+            # Set tailscale0 instead of eth0
+            send(reply_packet, verbose=0, iface='eth0')
             return
 
         if ICMP in packet and packet[ICMP].type == 8 and response != "disconnected":  # ICMP Echo Request
@@ -42,7 +44,9 @@ def reply_to_client(packet):
             reply_packet = ip_reply / icmp_reply / payload
 
             # Send the reply
-            send(reply_packet, verbose=0)
+            # Set sendp instead of send if using tailscale
+            # Set tailscale-interface instead of eth0
+            send(reply_packet, verbose=0, iface='eth0')
 
 
 def read_client(packet):

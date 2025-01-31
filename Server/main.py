@@ -60,8 +60,8 @@ if __name__ == "__main__":
     t1 = threading.Thread(target=clients_dashboard_thread, name='t1')
     t1.start()
 
-    # Create and start a thread for sniffing
-    t2 = threading.Thread(target=sniff, kwargs={'filter': 'icmp', 'prn': reply_to_client})
+    # Set iface=tailscale0 if using tailscale
+    t2 = threading.Thread(target=sniff, kwargs={'iface': 'eth0', 'filter': 'icmp', 'prn': reply_to_client})
     t2.start()
 
     # Create and start a thread for sniffing
