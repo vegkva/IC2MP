@@ -302,7 +302,7 @@ class Client:
         try:
             # print_info(),  '>' not supported between instances of 'NoneType' and 'int'
 
-            if self._timer_manager.get_elapsed_time(self._id) > int(self._timeout): # BUG here
+            if self._timer_manager.get_elapsed_time(self._id) > int(self._timeout)+3: # BUG here
                 self._client_ready = False
                 self._client_manager.clear_client_active()
             else:

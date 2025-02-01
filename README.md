@@ -15,7 +15,10 @@ By using this tool, you agree:
 A "covert channel" Command and Control framework.
 This framework uses the data portion of an ICMP-packet to transmit encrypted data between the server and connected clients.
 
+Use-case is a communication channel where only ICMP is allowed, or you know that ICMP-packets are not inspected.
+
 ![](./images/wireshark.png)
+
 
 
 ## Basic flow of the C2

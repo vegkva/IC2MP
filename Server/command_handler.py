@@ -29,24 +29,14 @@ class CommandHandler:
     def get_commands(self):
         return self._commands
 
-    def check(self, cmd):
-        if self._client_manager.get_clients():
-            for client in self._client_manager.get_clients():
-                if client.get_id() == self._client_manager.get_client_active():
-                    cmd()
-                else:
-                    print("No active client. Activate by using 'use <IP>'")
-
-        else:
-            print("No clients connected :/")
 
     def cmd_info(self):
         if self._client_manager.get_clients():
-            for client in self._client_manager.get_clients():
-                if client.get_id() == self._client_manager.get_client_active():
-                    client.print_attributes()
-                else:
-                    print("No active client. Activate by using 'use <IP>'")
+            if self._client_manager.get_client_active():
+                client = self._client_manager.get_client(self._client_manager.get_client_active())
+                client.print_attributes()
+            else:
+                print("No active client. Activate by using 'use <IP>'")
 
         else:
             print("No clients connected :/")
@@ -98,53 +88,53 @@ class CommandHandler:
 
     def cmd_blocksize(self, cmd):
         if self._client_manager.get_clients():
-            for client in self._client_manager.get_clients():
-                if client.get_id() == self._client_manager.get_client_active():
-                    if cmd.split()[1].isdigit():
-                        """
-                        ADVANCED MTU CONFIGURATION
-
-                        # Standard MTU is 1500
-                        # Default max data we can send in data payload header of an ICMP packet is therefore:
-                        # 20 bytes (IP header) + 8 bytes (ICMP header) + 1472 bytes (data payload) = 1500 bytes
-                        # Wireshark adds the Ethernet layer on top of this, which results in a size of 1514 bytes in total
-
-                        # If bigger blocksize is needed, first check if Jumbo Packet can be enabled on the network adapter:
-                            # Get-NetAdapterAdvancedProperty -RegistryKeyword "*JumboPacket"
-                            # If the current network adapter is displayed here:
-                                # Enable Jumbo Packet on CLIENT (require administrator privileges):
-                                    # Set-NetAdapterAdvancedProperty -Name "<network adapter name>" -DisplayName "Jumbo Packet" -DisplayValue "Enabled (9014)"
-                                    # This will increase the limit to 8972 bytes, inclusive.
-                            # If not, you have to change the current network adapter somehow
-
-                        # Then you can increase the MTU on the CLIENT:
-                            # netsh interface ipv4 set subinterface "<network adapter name>" mtu=<value <= 9000> store=persistent
-
-                        # Final step is to increase MTU on SERVER as well
-                            # sudo ip link set dev <network adapter name> mtu 10000
-                        """
-                        if int(cmd.split()[1]) > 1472:
-                            print_formatted_text(FormattedText([
-                                ('class:bright', '[INFO] '),
-                                ('class:bright',
-                                 f'{cmd.split()[1]} bytes not allowed. Maximum size allowed is 1472 bytes')
-                            ]), style=style)
-                            continue
-                        elif int(cmd.split()[1]) != 32:
-                            confirmation = input(
-                                f"Bad opsec to change blocksize to anything else than 32 bytes. Continue? (y/N)")
-                            if confirmation.lower() == "y":
-                                client.set_blocksize(int(cmd.split()[1]))
-                                client.set_server_command(cmd)
-                                self._client_manager.print_clients()
-                            else:
-                                pass
-                        else:
-                            client.set_blocksize(32)
-                            client.set_server_command("blocksize 32")
+            if self._client_manager.get_client_active():
+                client = self._client_manager.get_client(self._client_manager.get_client_active())
+                if cmd.split()[1].isdigit():
+                    """
+                    ADVANCED MTU CONFIGURATION
+    
+                    # Standard MTU is 1500
+                    # Default max data we can send in data payload header of an ICMP packet is therefore:
+                    # 20 bytes (IP header) + 8 bytes (ICMP header) + 1472 bytes (data payload) = 1500 bytes
+                    # Wireshark adds the Ethernet layer on top of this, which results in a size of 1514 bytes in total
+    
+                    # If bigger blocksize is needed, first check if Jumbo Packet can be enabled on the network adapter:
+                        # Get-NetAdapterAdvancedProperty -RegistryKeyword "*JumboPacket"
+                        # If the current network adapter is displayed here:
+                            # Enable Jumbo Packet on CLIENT (require administrator privileges):
+                                # Set-NetAdapterAdvancedProperty -Name "<network adapter name>" -DisplayName "Jumbo Packet" -DisplayValue "Enabled (9014)"
+                                # This will increase the limit to 8972 bytes, inclusive.
+                        # If not, you have to change the current network adapter somehow
+    
+                    # Then you can increase the MTU on the CLIENT:
+                        # netsh interface ipv4 set subinterface "<network adapter name>" mtu=<value <= 9000> store=persistent
+    
+                    # Final step is to increase MTU on SERVER as well
+                        # sudo ip link set dev <network adapter name> mtu 10000
+                    """
+                    if int(cmd.split()[1]) > 1472:
+                        print_formatted_text(FormattedText([
+                            ('class:bright', '[INFO] '),
+                            ('class:bright',
+                             f'{cmd.split()[1]} bytes not allowed. Maximum size allowed is 1472 bytes')
+                        ]), style=style)
+                        return
+                    elif int(cmd.split()[1]) != 32:
+                        confirmation = input(
+                            f"Bad opsec to change blocksize to anything else than 32 bytes. Continue? (y/N)")
+                        if confirmation.lower() == "y":
+                            client.set_blocksize(int(cmd.split()[1]))
+                            client.set_server_command(cmd)
                             self._client_manager.print_clients()
-                else:
-                    print("No active client. Activate by using 'use <IP>'")
+                        else:
+                            pass
+                    else:
+                        client.set_blocksize(32)
+                        client.set_server_command("blocksize 32")
+                        self._client_manager.print_clients()
+            else:
+                print("No active client. Activate by using 'use <IP>'")
 
         else:
             print("No clients connected :/")

