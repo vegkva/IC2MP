@@ -59,7 +59,6 @@ Commands:
 - blocksize <bytes>           Allowed block size (in bytes) is from 1 up to and including 1472
 ```
 
-
 ## Todo
 - Use SQLite to store data
 - Implement stealthy response from server
