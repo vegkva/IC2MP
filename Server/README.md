@@ -32,7 +32,32 @@ This will create a virtual environment, install the required python libraries ([
 ![](./images/server.png)
 
 
+## Commands
+```
+  ___ ____ ____  __  __ ____  
+ |_ _/ ___|___ \|  \/  |  _ \                                                                                                                                                                                                                                                                                                                                                          
+  | | |     __) | |\/| | |_) |                                                                                                                                                                                                                                                                                                                                                         
+  | | |___ / __/| |  | |  __/                                                                                                                                                                                                                                                                                                                                                          
+ |___\____|_____|_|  |_|_|                                                                                                                                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                                                                                                                                                                       
+ 
+> help
+Commands:
+- clients               Show connected clients
 
+- use <IP>              Select a client (unselect: `use none`)
+
+- cmd <cmd>             Run a command on the selected client (e.g. 'cmd whoami')
+- cmd all <cmd>         Run a command on all connected clients (requires no active client (`use none`))
+- cmd cancel            Cancel the running command
+- cmd clear             Clear the command variable
+
+- delay <seconds>       Change the delay between each packet sent from client (default: 0.5 seconds). Careful not to ICMP-flood the server
+- timeout <seconds>     Change the client's sleep time (default: 10 seconds). Careful not to ICMP-flood the server
+- updateAES             Client regenerates AES key and nonce, and sends it back to the server
+- info                  Show metadata about the selected client
+- blocksize <bytes>     Allowed block size (in bytes) is from 1 up to and including 1472
+```
 
 
 ## Todo
