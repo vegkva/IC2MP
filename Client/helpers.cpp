@@ -161,9 +161,11 @@ namespace Helper {
             exit = false;
             
         } 
+        
+        // Encrypt and split into blocks of client->getBlocksize()
         std::vector<std::string> to_server = EncryptAndSplit(client->getClientResponse());
 
-        // send "!ping" to server
+        // Send the encrypted message block by block
         std::string status = icmp.sendPing(sockfd, ip_addr, to_server, connected, exit);
 
         if (status == "SERVER OFFLINE") {
