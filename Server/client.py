@@ -236,6 +236,7 @@ class Client:
             print("OK: CANCEL")
             self.cmd_status("green", f"successfully canceled execution of command: {' '.join(self._client_response.split()[2:])}")
             self.cleanup()
+            self.get_time_manager().start_timer(self._id)
             return
         if "AESU" in self._client_response and self.getUpdateAES():
             self.cmd_status("green", "AES key and nonce updated")
