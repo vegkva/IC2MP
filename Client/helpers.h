@@ -22,7 +22,7 @@ extern Client* client;
 // Helper namespace for better organization
 namespace Helper {
     
-    bool Run(const std::wstring& command, const std::wstring& arguments, std::string& output);
+    bool Run(const std::wstring& command, const std::wstring& arguments, std::string* output);
     
     std::vector<unsigned char> hex_to_bytes(const std::string& hex);
 

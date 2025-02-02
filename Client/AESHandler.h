@@ -35,5 +35,5 @@ public:
 
     void Update();                         // Set key and nonce to the values from key_temp and nonce_temp
 
-    void InitAES(SOCKET sockfd, Custom_icmp icmp, std::string ip_addr, bool connected);
+    void InitAES(SOCKET sockfd, Custom_icmp icmp, const std::string& ip_addr, bool connected);
 };
